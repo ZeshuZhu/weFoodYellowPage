@@ -10,7 +10,7 @@ import PublishPage from './components/pages/PublishPage';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/weFoodYellowPage">
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

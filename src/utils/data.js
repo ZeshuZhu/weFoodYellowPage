@@ -2,16 +2,23 @@ import Papa from 'papaparse';
 
 // Function to load and parse the CSV data
 export const loadBusinessData = async () => {
-  try {
-    // Fetch the CSV file from the public folder
-    const response = await fetch('/fakeDataBase.csv');
-    const csvData = await response.text();
-    
-    const results = Papa.parse(csvData, {
-      header: true,
-      skipEmptyLines: true,
-      dynamicTyping: true
-    });
+    try {
+        console.log("Attempting to fetch CSV file...");
+        
+        const response = await fetch(`${process.env.PUBLIC_URL}/fakeDataBase.csv`);
+        console.log("Fetch response:", response.status, response.statusText);
+        
+        const csvData = await response.text();
+        console.log("CSV data first 100 chars:", csvData.substring(0, 100));
+        
+        const results = Papa.parse(csvData, {
+          header: true,
+          skipEmptyLines: true,
+          dynamicTyping: true
+        });
+        
+        console.log("Parsed results:", results);
+        console.log("First item keys:", results.data[0] ? Object.keys(results.data[0]) : "No data");
     
     // Transform the data to match our expected business structure
     const businesses = results.data.map((item, index) => ({
