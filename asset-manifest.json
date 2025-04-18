@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/weFoodYellowPage/static/js/main.5a752ab7.js",
+    "main.js": "/weFoodYellowPage/static/js/main.c4a1d754.js",
     "index.html": "/weFoodYellowPage/index.html",
-    "main.5a752ab7.js.map": "/weFoodYellowPage/static/js/main.5a752ab7.js.map"
+    "main.c4a1d754.js.map": "/weFoodYellowPage/static/js/main.c4a1d754.js.map"
   },
   "entrypoints": [
-    "static/js/main.5a752ab7.js"
+    "static/js/main.c4a1d754.js"
   ]
 }
