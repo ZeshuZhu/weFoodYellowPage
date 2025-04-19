@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global custom styles */
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+/* Custom utility classes */
+.btn {
+  @apply px-4 py-2 rounded-md transition-colors;
+}
+
+.btn-primary {
+  @apply bg-primary text-white hover:bg-blue-600;
+}
+
+.btn-secondary {
+  @apply bg-white border border-primary text-primary hover:bg-blue-50;
+}
+
+.btn-gray {
+  @apply bg-white border border-gray-300 text-gray-700 hover:bg-gray-50;
+}
+
+.card {
+  @apply bg-white shadow-md rounded-md overflow-hidden border border-lightGray;
+}
+
+.form-input {
+  @apply mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+/* Responsive utilities */
+.container {
+  @apply px-4 mx-auto;
+  max-width: 1280px;
+}
+
+/* Animation utilities */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Hide scrollbar utilities */
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
