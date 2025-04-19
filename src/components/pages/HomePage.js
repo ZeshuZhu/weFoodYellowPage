@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import { loadBusinessData } from '../../utils/data';
 import SearchBar from '../common/SearchBar';
 import CategorySelector from '../common/CategorySelector';
+import FilterSort from '../common/FilterSort';
+import BusinessCard from '../common/BusinessCard';
 
 const HomePage = () => {
   const [featuredBusinesses, setFeaturedBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [currentView, setCurrentView] = useState('grid');
   
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +28,27 @@ const HomePage = () => {
     
     fetchData();
   }, []);
+
+  // Add a resize listener to switch to grid view on desktop
+  useEffect(() => {
+    const handleResize = () => {
+      // 768px is Tailwind's md breakpoint
+      if (window.innerWidth >= 768 && currentView === 'list') {
+        setCurrentView('grid');
+      }
+    };
+
+    // Initial check
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Clean up
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [currentView]);
 
   const categories = [
     { id: 'All', icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>, label: 'All' },
@@ -43,6 +67,14 @@ const HomePage = () => {
 
   const handleCategoryClick = (categoryId) => {
     setActiveCategory(categoryId);
+  };
+
+  const handleViewChange = (view) => {
+    // Only allow list view on mobile
+    if (view === 'list' && window.innerWidth >= 768) {
+      return;
+    }
+    setCurrentView(view);
   };
 
   return (
@@ -69,12 +101,12 @@ const HomePage = () => {
             <span className="mr-1">👍</span>WEFOOD认证
           </label>
         </div>
-        <button className="flex items-center text-sm bg-gray-100 rounded-full py-1 px-3">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-          </svg>
-          Filter
-        </button>
+        
+        {/* Filter and View Toggle Component */}
+        <FilterSort 
+          onViewChange={handleViewChange}
+          currentView={currentView}
+        />
       </div>
       
       {/* Business Cards Section */}
@@ -84,69 +116,26 @@ const HomePage = () => {
         </div>
       ) : (
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card Grid/List Container */}
+          <div className={currentView === 'grid' 
+            ? 'grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4' 
+            : 'flex flex-col space-y-4'
+          }>
             {featuredBusinesses.map(business => (
-              <div key={business.id} className="bg-white rounded-lg overflow-hidden shadow-md border border-gray-200">
-                {/* Card Image */}
-                <div className="relative h-48 bg-gray-300">
-                  <img 
-                    src="https://via.placeholder.com/400x200" 
-                    alt={business.name} 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-2 left-2 bg-white bg-opacity-90 rounded px-2 py-1 text-sm">
-                    <span className="mr-1">👍</span>WEFOOD推荐
-                  </div>
-                  <button className="absolute top-2 right-2 bg-black bg-opacity-70 rounded p-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                    </svg>
-                  </button>
-                </div>
-                
-                {/* Card Content */}
-                <div className="p-4">
-                  {/* Rating */}
-                  <div className="flex mb-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <svg 
-                        key={star} 
-                        className={`h-5 w-5 ${star <= 4 ? 'text-yellow-400' : 'text-gray-300'}`} 
-                        fill="currentColor" 
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-lg font-medium mb-1">Card title 1/EN</h3>
-                  <p className="text-gray-500 text-sm mb-3">Card title 1/EN</p>
-                  
-                  {/* Location */}
-                  <div className="flex items-center text-gray-600 text-sm mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Chino Hills, CA
-                  </div>
-                  
-                  {/* Actions */}
-                  <div className="flex justify-between items-center">
-                    <button className="text-gray-600 text-sm">提写评论</button>
-                    <div className="relative">
-                      <button className="flex items-center bg-black text-white text-sm px-3 py-1 rounded-sm">
-                        了解更多
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <BusinessCard
+                key={business.id}
+                business={{
+                  ...business,
+                  imageUrl: "https://via.placeholder.com/400x200",
+                  rating: 4,
+                  location: "Chino Hills, CA",
+                  recommended: true
+                }}
+                view={currentView}
+                onSave={() => console.log('Save business', business.id)}
+                onDetailsClick={() => console.log('View details', business.id)}
+                onReviewClick={() => console.log('Write review', business.id)}
+              />
             ))}
           </div>
         </div>

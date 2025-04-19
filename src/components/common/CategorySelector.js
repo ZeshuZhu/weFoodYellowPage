@@ -81,8 +81,8 @@ const CategorySelector = ({ categories, activeCategory, onCategoryClick }) => {
         
         <div 
           ref={scrollContainerRef}
-          className="flex overflow-x-auto py-4 px-10 gap-6 hide-scrollbar mx-auto"
-          style={{
+          className="flex overflow-x-auto py-4 px-10 gap-8 hide-scrollbar mx-auto"
+            style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             maxWidth: '100%',
@@ -98,7 +98,7 @@ const CategorySelector = ({ categories, activeCategory, onCategoryClick }) => {
           {categories.map((category) => (
             <div 
               key={category.id}
-              className={`flex flex-col items-center cursor-pointer min-w-fit ${
+              className={`flex flex-col items-center cursor-pointer min-w-[80px] px-2 ${
                 activeCategory === category.id ? 'opacity-100' : 'opacity-70 hover:opacity-100'
               }`}
               onClick={() => onCategoryClick(category.id)}
