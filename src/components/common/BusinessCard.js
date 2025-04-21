@@ -68,67 +68,69 @@ const BusinessCard = ({
         )}
       </div>
       
-      {/* Card Content with fixed heights for content sections */}
-      <div className={`p-3 ${!isGridView ? 'flex-grow' : ''}`}>
-        <div className="flex flex-col h-full">
-          {/* Fixed height content container */}
-          <div className="flex-grow" style={{ minHeight: '100px' }}>
-            {/* Star ratings */}
-            <div className="flex mb-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <svg 
-                  key={star} 
-                  className={`h-4 w-4 ${star <= (business.rating || 4) ? 'text-yellow-400' : 'text-gray-300'}`} 
-                  fill="currentColor" 
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            
-            {/* Business title */}
-            <h3 className="text-lg font-medium mb-1 truncate">{business.name || "Card title 1/EN"}</h3>
-            
-            {/* Description - FIXED HEIGHT */}
-            <p className="text-gray-500 text-sm line-clamp-1" 
-               style={{ maxHeight: '40px', overflow: 'hidden', marginBottom: '8px' }}>
-              {business.description || "Card description."}
-            </p>
-            
-            {/* Location - FIXED POSITION */}
-            {business.location && (
-              <div className="flex items-center text-gray-600 text-sm" 
-                   style={{ height: '24px', overflow: 'hidden' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span className="truncate">{business.location}</span>
+      {/* Card Content - Modified for better list view layout */}
+      <div className={`p-3 ${!isGridView ? 'flex-grow flex flex-col' : ''}`}>
+        {isGridView ? (
+          // Grid View Layout
+          <div className="flex flex-col h-full">
+            {/* Fixed height content container */}
+            <div className="flex-grow" style={{ minHeight: '100px' }}>
+              {/* Star ratings */}
+              <div className="flex mb-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg 
+                    key={star} 
+                    className={`h-4 w-4 ${star <= (business.rating || 4) ? 'text-yellow-400' : 'text-gray-300'}`} 
+                    fill="currentColor" 
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
               </div>
-            )}
-          </div>
-          
-          {/* Action Buttons - Mobile: Vertical, Desktop: Horizontal */}
-          {isGridView && isMobile ? (
-            // Mobile Grid View: Vertical buttons
-            <div className="mt-2">
-              <button 
-                className="w-full bg-black text-white text-sm py-2 px-3 mb-2 rounded-md border border-black"
-                onClick={onDetailsClick}
-              >
-                了解更多
-              </button>
-              <button 
-                className="w-full text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
-                onClick={onReviewClick}
-              >
-                提写评论
-              </button>
+              
+              {/* Business title */}
+              <h3 className="text-lg font-medium mb-1 truncate">{business.name || "Card title 1/EN"}</h3>
+              
+              {/* Description - FIXED HEIGHT */}
+              <p className="text-gray-500 text-sm line-clamp-1" 
+                style={{ maxHeight: '40px', overflow: 'hidden', marginBottom: '8px' }}>
+                {business.description || "Card description."}
+              </p>
+              
+              {/* Location - FIXED POSITION */}
+              {business.location && (
+                <div className="flex items-center text-gray-600 text-sm" 
+                    style={{ height: '24px', overflow: 'hidden' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="truncate">{business.location}</span>
+                </div>
+              )}
             </div>
-          ) : (
-            // Desktop or List View: Horizontal buttons
-            <div className="flex justify-between items-center mt-2">
+            
+            {/* Grid View Buttons */}
+            {isMobile ? (
+              // Mobile Grid View: Vertical buttons
+              <div className="mt-2">
+                <button 
+                  className="w-full bg-black text-white text-sm py-2 px-3 mb-2 rounded-md border border-black"
+                  onClick={onDetailsClick}
+                >
+                  了解更多
+                </button>
+                <button 
+                  className="w-full text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
+                  onClick={onReviewClick}
+                >
+                  提写评论
+                </button>
+              </div>
+            ) : (
+              // Desktop Grid View: Horizontal buttons
+              <div className="flex justify-end items-center mt-2 space-x-4">
               <button 
                 className="text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
                 onClick={onReviewClick}
@@ -142,8 +144,66 @@ const BusinessCard = ({
                 了解更多
               </button>
             </div>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          // List/Row View Layout - Completely restructured
+          <div className="flex flex-col justify-between h-full">
+            {/* Top content section */}
+            <div>
+              {/* Star ratings */}
+              <div className="flex mb-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg 
+                    key={star} 
+                    className={`h-4 w-4 ${star <= (business.rating || 4) ? 'text-yellow-400' : 'text-gray-300'}`} 
+                    fill="currentColor" 
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              
+              {/* Business title */}
+              <h3 className="text-lg font-medium mb-1 truncate">{business.name || "Card title 1/EN"}</h3>
+              
+              {/* Description - FIXED HEIGHT */}
+              <p className="text-gray-500 text-sm line-clamp-1" 
+                style={{ maxHeight: '20px', overflow: 'hidden', marginBottom: '8px' }}>
+                {business.description || "Card description."}
+              </p>
+              
+              {/* Location - FIXED POSITION */}
+              {business.location && (
+                <div className="flex items-center text-gray-600 text-sm" 
+                    style={{ height: '24px', overflow: 'hidden' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="truncate">{business.location}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Bottom section with buttons - Fixed layout for list view */}
+            <div className="flex justify-end items-center mt-2 space-x-4">
+              <button 
+                className="text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
+                onClick={onReviewClick}
+              >
+                提写评论
+              </button>
+              <button 
+                className="bg-black text-white text-sm py-1.5 px-4 rounded-md border border-black"
+                onClick={onDetailsClick}
+              >
+                了解更多
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
