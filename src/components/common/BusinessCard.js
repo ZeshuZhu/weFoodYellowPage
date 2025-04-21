@@ -32,6 +32,16 @@ const BusinessCard = ({
     }
   };
 
+  // CSS style for description truncation - works cross-browser
+  const descriptionStyle = {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp: 1,
+    WebkitBoxOrient: 'vertical',
+    marginBottom: '8px'
+  };
+
   return (
     <div 
       className={`bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 ${
@@ -92,17 +102,15 @@ const BusinessCard = ({
               {/* Business title */}
               <h3 className="text-lg font-medium mb-1 truncate">{business.name || "Card title 1/EN"}</h3>
               
-              {/* Description - FIXED HEIGHT */}
-              <p className="text-gray-500 text-sm line-clamp-1" 
-                style={{ maxHeight: '40px', overflow: 'hidden', marginBottom: '8px' }}>
+              {/* Description - UPDATED with cross-browser compatible style */}
+              <p className="text-gray-500 text-sm" style={descriptionStyle}>
                 {business.description || "Card description."}
               </p>
               
               {/* Location - FIXED POSITION */}
               {business.location && (
-                <div className="flex items-center text-gray-600 text-sm" 
-                    style={{ height: '24px', overflow: 'hidden' }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="flex items-center text-gray-600 text-sm mb-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -131,19 +139,19 @@ const BusinessCard = ({
             ) : (
               // Desktop Grid View: Horizontal buttons
               <div className="flex justify-end items-center mt-2 space-x-4">
-              <button 
-                className="text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
-                onClick={onReviewClick}
-              >
-                提写评论
-              </button>
-              <button 
-                className="bg-black text-white text-sm py-1.5 px-4 rounded-md border border-black"
-                onClick={onDetailsClick}
-              >
-                了解更多
-              </button>
-            </div>
+                <button 
+                  className="text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
+                  onClick={onReviewClick}
+                >
+                  提写评论
+                </button>
+                <button 
+                  className="bg-black text-white text-sm py-1.5 px-4 rounded-md border border-black"
+                  onClick={onDetailsClick}
+                >
+                  了解更多
+                </button>
+              </div>
             )}
           </div>
         ) : (
@@ -168,17 +176,15 @@ const BusinessCard = ({
               {/* Business title */}
               <h3 className="text-lg font-medium mb-1 truncate">{business.name || "Card title 1/EN"}</h3>
               
-              {/* Description - FIXED HEIGHT */}
-              <p className="text-gray-500 text-sm line-clamp-1" 
-                style={{ maxHeight: '20px', overflow: 'hidden', marginBottom: '8px' }}>
+              {/* Description - UPDATED with cross-browser compatible style */}
+              <p className="text-gray-500 text-sm" style={descriptionStyle}>
                 {business.description || "Card description."}
               </p>
               
               {/* Location - FIXED POSITION */}
               {business.location && (
-                <div className="flex items-center text-gray-600 text-sm" 
-                    style={{ height: '24px', overflow: 'hidden' }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="flex items-center text-gray-600 text-sm mb-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
