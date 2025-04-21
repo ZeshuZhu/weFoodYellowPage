@@ -6,7 +6,6 @@ import CategorySelector from '../common/CategorySelector';
 import FilterSort from '../common/FilterSort';
 import BusinessCard from '../common/BusinessCard';
 import BusinessDetailPanel from '../common/BusinessDetailPanel';
-import Header from '../layout/Header';
 
 const HomePage = () => {
   const [featuredBusinesses, setFeaturedBusinesses] = useState([]);
@@ -80,16 +79,30 @@ const HomePage = () => {
 
   // Function to open business detail panel
   const handleShowBusinessDetail = (business) => {
-    console.log('Opening business detail:', business.id);
+    // Prevent reopening the same business
+    if (isDetailOpen && selectedBusiness && selectedBusiness.id === business.id) {
+      return;
+    }
     
-    // Find the business in our data
     const businessDetail = featuredBusinesses.find(b => b.id === business.id);
     if (businessDetail) {
-      setSelectedBusiness({
-        ...businessDetail,
-        imageUrl: getPlaceholderImage()
-      });
-      setIsDetailOpen(true);
+      // Close panel first if it's already open
+      if (isDetailOpen) {
+        setIsDetailOpen(false);
+        setTimeout(() => {
+          setSelectedBusiness({
+            ...businessDetail,
+            imageUrl: getPlaceholderImage()
+          });
+          setIsDetailOpen(true);
+        }, 200); // Match animation duration
+      } else {
+        setSelectedBusiness({
+          ...businessDetail,
+          imageUrl: getPlaceholderImage()
+        });
+        setIsDetailOpen(true);
+      }
     }
   };
 
@@ -99,7 +112,7 @@ const HomePage = () => {
     // After animation completes, clear the selected business
     setTimeout(() => {
       setSelectedBusiness(null);
-    }, 300);
+    }, 200); // Match animation duration
   };
 
   const handleCategoryClick = (categoryId) => {
@@ -131,84 +144,75 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Single Header - Fixed position, always spans full width */}
-      <Header />
-      
-      {/* Main content area below the header */}
-      <div className="pt-16 flex flex-col flex-grow">
-        {/* Main content container */}
-        <div className="flex relative flex-grow">
-          {/* Main content that resizes */}
-          <div 
-            className="transition-all duration-300 ease-in-out"
-            style={{
-              width: !isMobile && isDetailOpen ? '66.67%' : '100%', // 2/3 of screen when panel is open
-              transition: 'width 300ms ease-in-out'
-            }}
-          >
-            <div className="py-6 px-4">
-              {/* Search Bar Section */}
-              <div className="mb-10 mt-6">
-                <SearchBar />
-              </div>
-              
-              {/* Categories Section */}
-              <div className="container mx-auto mb-8">
-                <CategorySelector 
-                  categories={categories}
-                  activeCategory={activeCategory}
-                  onCategoryClick={handleCategoryClick}
-                />
-              </div>
-              
-              {/* Filter Section */}
-              <div className="container mx-auto flex justify-between mb-6">
-                <div className="flex items-center bg-gray-100 rounded-full py-1 px-3">
-                  <input type="checkbox" id="wefood-verified" className="mr-2" />
-                  <label htmlFor="wefood-verified" className="text-sm flex items-center">
-                    <span className="mr-1">👍</span>WEFOOD认证
-                  </label>
-                </div>
-                
-                {/* Filter and View Toggle Component */}
-                <FilterSort 
-                  onViewChange={handleViewChange}
-                  currentView={currentView}
-                />
-              </div>
-              
-              {/* Business Cards Section */}
-              {loading ? (
-                <div className="flex justify-center py-8">
-                  <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              ) : (
-                <div className="container mx-auto">
-                  {/* Card Grid/List Container */}
-                  <div className={currentView === 'grid' 
-                    ? 'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4' 
-                    : 'flex flex-col space-y-4'
-                  }>
-                    {featuredBusinesses.map((business, index) => (
-                      <BusinessCard
-                        key={business.id}
-                        business={{
-                          ...business,
-                          imageUrl: getPlaceholderImage(),
-                          location: business.addresses || "Chino Hills, CA",
-                          recommended: index % 2 === 0 // Just for demo
-                        }}
-                        view={currentView}
-                        initialFavorited={index % 3 === 0} // For demonstration
-                        onSave={(isFavorited) => console.log('Save business', business.id, isFavorited)}
-                        onDetailsClick={() => handleShowBusinessDetail(business)}
-                        onReviewClick={() => console.log('Write review', business.id)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
+      {/* Main content area */}
+      <div className="flex flex-col flex-grow">
+        {/* Main content container - Added ID for targeting */}
+        <div 
+          id="main-content"
+          className="w-full transition-width"
+        >
+          <div className="py-6 px-4">
+            {/* Search Bar Section */}
+            <div className="mb-10 mt-6">
+              <SearchBar />
             </div>
+            
+            {/* Categories Section */}
+            <div className="container mx-auto mb-8">
+              <CategorySelector 
+                categories={categories}
+                activeCategory={activeCategory}
+                onCategoryClick={handleCategoryClick}
+              />
+            </div>
+            
+            {/* Filter Section */}
+            <div className="container mx-auto flex justify-between mb-6">
+              <div className="flex items-center bg-gray-100 rounded-full py-1 px-3">
+                <input type="checkbox" id="wefood-verified" className="mr-2" />
+                <label htmlFor="wefood-verified" className="text-sm flex items-center">
+                  <span className="mr-1">👍</span>WEFOOD认证
+                </label>
+              </div>
+              
+              {/* Filter and View Toggle Component */}
+              <FilterSort 
+                onViewChange={handleViewChange}
+                currentView={currentView}
+              />
+            </div>
+            
+            {/* Business Cards Section */}
+            {loading ? (
+              <div className="flex justify-center py-8">
+                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              <div className="container mx-auto">
+                {/* Card Grid/List Container */}
+                <div className={currentView === 'grid' 
+                  ? 'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4' 
+                  : 'flex flex-col space-y-4'
+                }>
+                  {featuredBusinesses.map((business, index) => (
+                    <BusinessCard
+                      key={business.id}
+                      business={{
+                        ...business,
+                        imageUrl: getPlaceholderImage(),
+                        location: business.addresses || "Chino Hills, CA",
+                        recommended: index % 2 === 0 // Just for demo
+                      }}
+                      view={currentView}
+                      initialFavorited={index % 3 === 0} // For demonstration
+                      onSave={(isFavorited) => console.log('Save business', business.id, isFavorited)}
+                      onDetailsClick={() => handleShowBusinessDetail(business)}
+                      onReviewClick={() => console.log('Write review', business.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

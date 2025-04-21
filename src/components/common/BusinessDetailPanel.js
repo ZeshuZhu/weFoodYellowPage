@@ -1,17 +1,16 @@
 // src/components/common/BusinessDetailPanel.js
 import React, { useState, useEffect, useRef } from 'react';
-import { CSSTransition } from 'react-transition-group';
 
 const BusinessDetailPanel = ({ 
   business, 
   isOpen, 
   onClose 
 }) => {
-  const [activeTab, setActiveTab] = useState('basic'); // basic, company, services
+  const [activeTab, setActiveTab] = useState('basic');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const panelRef = useRef(null);
   
-  // Check if we're on a mobile device
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -21,7 +20,7 @@ const BusinessDetailPanel = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Handle escape key to close panel
+  // Handle escape key
   useEffect(() => {
     const handleEscKey = (event) => {
       if (event.key === 'Escape' && isOpen) {
@@ -33,19 +32,34 @@ const BusinessDetailPanel = ({
     return () => document.removeEventListener('keydown', handleEscKey);
   }, [isOpen, onClose]);
   
-  // Apply body scrolling control on mobile only
+  // Control body scroll on mobile
   useEffect(() => {
-    if (isMobile) {
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = 'auto';
-      }
+    if (isMobile && isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
     }
     
     return () => {
       document.body.style.overflow = 'auto';
     };
+  }, [isOpen, isMobile]);
+
+  // Manage content shift when panel opens/closes
+  useEffect(() => {
+    // Don't do anything on mobile
+    if (isMobile) return;
+    
+    const content = document.getElementById('main-content');
+    const header = document.querySelector('header');
+    
+    if (isOpen) {
+      if (content) content.classList.add('content-shifted');
+      if (header) header.classList.add('header-shifted');
+    } else {
+      if (content) content.classList.remove('content-shifted');
+      if (header) header.classList.remove('header-shifted');
+    }
   }, [isOpen, isMobile]);
 
   if (!business) {
@@ -59,53 +73,43 @@ const BusinessDetailPanel = ({
   if (isMobile) {
     return (
       <>
-        {/* Mobile backdrop overlay */}
-        <CSSTransition
-          in={isOpen}
-          timeout={300}
-          classNames="modal-backdrop"
-          unmountOnExit
-        >
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
-            onClick={onClose}
-          ></div>
-        </CSSTransition>
+        {/* Mobile backdrop */}
+        <div 
+          className={`fixed inset-0 bg-black z-40 ${isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'}`}
+          onClick={onClose}
+          style={{ transition: 'opacity 500ms ease' }}
+        ></div>
         
-        {/* Mobile slide-up panel */}
-        <CSSTransition
-          in={isOpen}
-          timeout={300}
-          classNames="slide-up"
-          unmountOnExit
-          nodeRef={panelRef}
+        {/* Mobile panel */}
+        <div 
+          ref={panelRef}
+          className="fixed inset-0 z-50 bg-white shadow-xl overflow-hidden transform"
+          style={{ 
+            transform: isOpen ? 'translateY(0)' : 'translateY(100%)',
+            transition: 'transform 500ms cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
         >
-          <div 
-            ref={panelRef}
-            className="fixed inset-0 z-50 bg-white shadow-xl overflow-hidden transform transition-transform duration-300"
-            style={{ transform: isOpen ? 'translateY(0)' : 'translateY(100%)' }}
-          >
-            {/* Panel content */}
-            {renderPanelContent()}
-          </div>
-        </CSSTransition>
+          {renderPanelContent()}
+        </div>
       </>
     );
   }
   
-  // Desktop view uses a side panel that resizes the main content
+  // Desktop view with side panel
   return (
     <div 
       ref={panelRef}
-      className={`fixed top-0 right-0 h-full bg-white shadow-xl z-30 transition-all duration-300 ease-in-out overflow-hidden ${
-        isOpen ? 'w-1/3' : 'w-0' // Changed to w-1/3 (33.3% width)
-      }`}
+      className="fixed top-0 right-0 h-full bg-white shadow-xl z-30 overflow-hidden"
+      style={{ 
+        width: isOpen ? '33.33%' : '0',
+        transition: 'width 500ms cubic-bezier(0.16, 1, 0.3, 1)'
+      }}
     >
       {isOpen && renderPanelContent()}
     </div>
   );
   
-  // Helper function to render panel content (used in both mobile and desktop)
+  // Panel content rendering
   function renderPanelContent() {
     return (
       <>
@@ -120,10 +124,10 @@ const BusinessDetailPanel = ({
           </svg>
         </button>
         
-        {/* Save/Bookmark button */}
+        {/* Save button */}
         <button
           className="absolute right-4 top-4 z-10 bg-black bg-opacity-70 rounded p-2"
-          aria-label="Save business"
+          aria-label="Save"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
@@ -154,13 +158,7 @@ const BusinessDetailPanel = ({
               {[1, 2, 3, 4, 5].map((star) => (
                 <svg 
                   key={star} 
-                  className={`h-5 w-5 ${
-                    star <= Math.floor(business.rating || 4) 
-                      ? 'text-yellow-400' 
-                      : star <= (business.rating || 4) 
-                        ? 'text-yellow-400' 
-                        : 'text-gray-300'
-                  }`} 
+                  className={`h-5 w-5 ${star <= (business.rating || 4) ? 'text-yellow-400' : 'text-gray-300'}`} 
                   fill="currentColor" 
                   viewBox="0 0 20 20"
                 >
@@ -195,10 +193,6 @@ const BusinessDetailPanel = ({
           {/* Business Category */}
           <h3 className="text-xl font-medium mb-2">{business.keyword || '装修/建筑'}</h3>
           
-          {/* Business Description */}
-          <p className="text-gray-600 mb-6 whitespace-pre-line">
-            {business.description || ''}
-          </p>
           
           {/* Tabs Navigation */}
           <div className="border-b border-gray-200 mb-6">
@@ -265,18 +259,6 @@ const BusinessDetailPanel = ({
                   </div>
                 )}
                 
-                {/* Fax */}
-                {business.fax && (
-                  <div className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <div>
-                      <p className="text-gray-800">{business.fax}</p>
-                    </div>
-                  </div>
-                )}
-                
                 {/* Website */}
                 {(business.website || business.url) && (
                   <div className="flex">
@@ -339,16 +321,6 @@ const BusinessDetailPanel = ({
                 )}
               </div>
             )}
-          </div>
-          
-          {/* Suggest Edit Link */}
-          <div className="text-center mt-8">
-            <button className="inline-flex items-center text-gray-600 text-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-              Suggest an edit
-            </button>
           </div>
         </div>
       </>

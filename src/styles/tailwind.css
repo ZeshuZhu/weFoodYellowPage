@@ -72,88 +72,120 @@ body {
 
 /* Animation for the modal */
 @keyframes slide-up {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
+  from {
+    transform: translateY(100%);
   }
-  
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  to {
+    transform: translateY(0);
   }
+}
   
-  .animate-slide-up {
-    animation: slide-up 0.3s ease-out;
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
   
-  .animate-fade-in {
-    animation: fade-in 0.3s ease-out;
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+  
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* SYNCHRONIZED ANIMATION SPEEDS - ALL 300ms */
+/* Header and content transitions */
+header {
+    position: sticky !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 40 !important;
+    width: 100%;
+    transition: width 50ms ease-in-out !important;
+    background-color: rgba(255, 255, 255, 0.5) !important; /* Semi-transparent white */
+    backdrop-filter: blur(10px) !important; /* Add blur effect */
+    -webkit-backdrop-filter: blur(10px) !important; /* For Safari support */
   }
 
-  /* Add these styles to your tailwind.css file */
+.header-shifted {
+  width: calc(100% - 33.33%) !important;
+}
+
+#main-content {
+  width: 100%;
+  transition: width 300ms ease-in-out !important;
+}
+
+.content-shifted {
+  width: 66.67% !important;
+}
+
+.transition-width {
+  transition: width 300ms ease-in-out !important;
+}
+
+/* Remove mobile shifts */
+@media (max-width: 767px) {
+  #main-content, header {
+    width: 100% !important;
+  }
+  
+  .header-shifted, .content-shifted {
+    width: 100% !important;
+  }
+}
+
+/* Remove padding */
+.pt-16 {
+  padding-top: 0 !important;
+}
 
 /* Animation for mobile slide-up panel */
 .slide-up-enter {
-    transform: translateY(100%);
-  }
-  .slide-up-enter-active {
-    transform: translateY(0);
-    transition: transform 300ms cubic-bezier(0.33, 1, 0.68, 1);
-  }
-  .slide-up-exit {
-    transform: translateY(0);
-  }
-  .slide-up-exit-active {
-    transform: translateY(100%);
-    transition: transform 300ms cubic-bezier(0.32, 0, 0.67, 0);
-  }
+  transform: translateY(100%);
+}
+.slide-up-enter-active {
+  transform: translateY(0);
+  transition: transform 300ms ease-in-out !important;
+}
+.slide-up-exit {
+  transform: translateY(0);
+}
+.slide-up-exit-active {
+  transform: translateY(100%);
+  transition: transform 300ms ease-in-out !important;
+}
   
-  /* Mobile backdrop overlay */
-  .modal-backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transition: opacity 300ms ease;
-  }
-  .modal-backdrop-enter-active {
-    opacity: 1;
-  }
-  .modal-backdrop-exit-active {
-    opacity: 0;
-  }
+/* Mobile backdrop overlay */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 300ms ease-in-out !important;
+}
+.modal-backdrop-enter-active {
+  opacity: 1;
+}
+.modal-backdrop-exit-active {
+  opacity: 0;
+}
   
-  /* These styles ensure the header is fixed at the top */
-  header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 40;
-    background-color: white;
-  }
+/* Body styles to ensure proper overflow handling */
+body {
+  overflow-x: hidden;
+}
   
-  /* Add padding top to account for fixed header */
-  .pt-16 {
-    padding-top: 4rem;
-  }
-  
-  /* Body styles to ensure proper overflow handling */
-  body {
-    overflow-x: hidden;
-  }
-  
-  /* If there are scrollbar issues on detail panel open */
-  .overflow-hidden {
-    overflow: hidden;
-  }
-  
-  /* Make sure the main content width animates smoothly */
-  .transition-all.duration-300.ease-in-out {
-    transition: width 300ms ease-in-out, padding 300ms ease-in-out;
-  }
+/* Make sure the main content width animates smoothly */
+.transition-all.duration-300.ease-in-out,
+.transition-all.duration-500.ease-in-out {
+  transition: width 300ms ease-in-out !important, 
+              padding 300ms ease-in-out !important;
+}
+
+/* Fixed transition for detail panel */
+.fixed.top-0.right-0.h-full.bg-white.shadow-xl.z-30.overflow-hidden {
+  transition: width 300ms ease-in-out !important;
+}
