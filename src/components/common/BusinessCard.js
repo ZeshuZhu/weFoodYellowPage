@@ -1,33 +1,58 @@
 // src/components/common/BusinessCard.js
-import React from 'react';
+import React, { useState } from 'react';
 
-const BusinessCard = ({ business, view = 'grid', onSave, onDetailsClick, onReviewClick }) => {
+const BusinessCard = ({ 
+  business, 
+  view = 'grid', 
+  onSave, 
+  onDetailsClick, 
+  onReviewClick,
+  initialFavorited = false 
+}) => {
+  const [favorited, setFavorited] = useState(initialFavorited);
   const isGridView = view === 'grid';
+  const isMobile = window.innerWidth < 768;
   
+  const handleSave = () => {
+    setFavorited(!favorited);
+    if (onSave) {
+      onSave(!favorited);
+    }
+  };
+
   return (
     <div 
+      // DESIGN: Main card container
       className={`bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 ${
-        !isGridView ? 'flex flex-row' : ''
-      }`}
+        !isGridView && isMobile ? 'flex flex-col' : 
+        !isGridView && !isMobile ? 'flex flex-row' : ''
+      } ${isGridView ? 'h-full' : ''}`}
     >
-      {/* Card Image */}
+      {/* DESIGN: Card Image */}
       <div className={`relative ${
-        isGridView ? 'aspect-square w-full' : 'h-40 w-40 min-w-[160px]'
+        isGridView && isMobile ? 'aspect-square w-full' : 
+        isGridView && !isMobile ? 'aspect-video w-full' : 
+        !isGridView && isMobile ? 'h-48 w-full' :
+        'h-48 w-48 min-w-[12rem]'
       }`}>
         <img 
-          src={business.imageUrl || "https://via.placeholder.com/400x200"} 
+          src={business.imageUrl || "https://placehold.co/200x120"} 
           alt={business.name} 
           className="w-full h-full object-cover"
         />
+        {/* DESIGN: Bookmark/favorite button */}
         <button 
-          className="absolute top-2 right-2 bg-black bg-opacity-70 rounded p-1"
-          onClick={onSave}
-          aria-label="Save business"
+          className={`absolute top-2 right-2 ${
+            favorited ? 'bg-blue-600' : 'bg-black bg-opacity-70'
+          } rounded p-1`}
+          onClick={handleSave}
+          aria-label={favorited ? "Remove from favorites" : "Save business"}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill={favorited ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
           </svg>
         </button>
+        {/* DESIGN: WEFOOD recommendation badge */}
         {business.recommended && (
           <div className="absolute bottom-2 left-2 bg-white bg-opacity-90 rounded px-2 py-1 text-sm">
             <span className="mr-1">👍</span>WEFOOD推荐
@@ -35,10 +60,15 @@ const BusinessCard = ({ business, view = 'grid', onSave, onDetailsClick, onRevie
         )}
       </div>
       
-      {/* Card Content */}
-      <div className={`${isGridView ? 'p-3' : 'p-3 flex flex-col justify-between flex-grow'}`}>
-        {/* Rating Stars */}
-        <div>
+      {/* DESIGN: Card Content - Increased min-height for more space */}
+      <div className={`${
+        isGridView ? 'p-3 flex flex-col' : 
+        !isGridView && isMobile ? 'p-3 flex flex-col' :
+        'p-3 flex flex-col justify-between flex-grow'
+      } ${isGridView ? 'min-h-[14rem]' : ''}`}>
+        {/* DESIGN: Content container */}
+        <div className="flex-grow">
+          {/* DESIGN: Star ratings */}
           <div className="flex mb-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <svg 
@@ -52,27 +82,31 @@ const BusinessCard = ({ business, view = 'grid', onSave, onDetailsClick, onRevie
             ))}
           </div>
           
-          {/* Business Title */}
-          <h3 className="text-lg font-medium mb-1">{business.name || "Card title 1/EN"}</h3>
-          <p className="text-gray-500 text-sm mb-3">{business.description || "Card title 1/EN"}</p>
+          {/* DESIGN: Business title */}
+          <h3 className="text-lg font-medium mb-1 truncate">{business.name || "Card title 1/EN"}</h3>
           
-          {/* Location */}
+          {/* DESIGN: Description */}
+          <p className="text-gray-500 text-sm mb-3 line-clamp-2">{business.description || "Card description."}</p>
+          
+          {/* DESIGN: Location */}
           {business.location && (
             <div className="flex items-center text-gray-600 text-sm mb-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              {business.location}
+              <span className="truncate">{business.location}</span>
             </div>
           )}
         </div>
         
-        {/* Action Buttons - Different layouts for grid/list views */}
-        {isGridView ? (
-          <div className="flex flex-col space-y-2">
+        {/* DESIGN: Action Buttons - Increased spacing and padding */}
+        {isGridView && isMobile ? (
+          // Mobile Grid View - Vertical buttons with more spacing
+          <div className="flex flex-col space-y-4 mt-4">
+            {/* Learn More button - increased padding */}
             <button 
-              className="bg-black text-white text-sm py-1.5 px-3 rounded-sm flex items-center justify-center"
+              className="w-full bg-black text-white text-sm py-2 px-3 rounded-none flex items-center justify-center"
               onClick={onDetailsClick}
             >
               了解更多
@@ -80,23 +114,26 @@ const BusinessCard = ({ business, view = 'grid', onSave, onDetailsClick, onRevie
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
+            
+            {/* Write Review button - increased spacing */}
             <button 
-              className="text-gray-600 text-sm text-center"
+              className="w-full text-gray-600 text-sm text-center py-1"
               onClick={onReviewClick}
             >
               提写评论
             </button>
           </div>
         ) : (
-          <div className="flex justify-between items-center">
+          // All other views - Side by side with more space
+          <div className="flex justify-between items-center mt-4 pt-2 border-t border-gray-100">
             <button 
-              className="text-gray-600 text-sm"
+              className="text-gray-600 text-sm py-1"
               onClick={onReviewClick}
             >
               提写评论
             </button>
             <button 
-              className="bg-black text-white text-sm py-1.5 px-3 rounded-sm flex items-center"
+              className="bg-black text-white text-sm py-1.5 px-4 rounded-full flex items-center"
               onClick={onDetailsClick}
             >
               了解更多

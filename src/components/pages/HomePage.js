@@ -17,8 +17,8 @@ const HomePage = () => {
     const fetchData = async () => {
       try {
         const data = await loadBusinessData();
-        // Just use the first 4 businesses for now
-        setFeaturedBusinesses(data.slice(0, 4));
+        // Get up to 8 businesses to show
+        setFeaturedBusinesses(data.slice(0, 8));
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
@@ -118,21 +118,21 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           {/* Card Grid/List Container */}
           <div className={currentView === 'grid' 
-            ? 'grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4' 
+            ? 'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4' 
             : 'flex flex-col space-y-4'
           }>
-            {featuredBusinesses.map(business => (
+            {featuredBusinesses.map((business, index) => (
               <BusinessCard
                 key={business.id}
                 business={{
                   ...business,
-                  imageUrl: "https://via.placeholder.com/400x200",
-                  rating: 4,
-                  location: "Chino Hills, CA",
-                  recommended: true
+                  imageUrl: "https://placehold.co/200x120",
+                  location: business.addresses || "Chino Hills, CA",
+                  recommended: index % 2 === 0 // Just for demo
                 }}
                 view={currentView}
-                onSave={() => console.log('Save business', business.id)}
+                initialFavorited={index % 3 === 0} // For demonstration
+                onSave={(isFavorited) => console.log('Save business', business.id, isFavorited)}
                 onDetailsClick={() => console.log('View details', business.id)}
                 onReviewClick={() => console.log('Write review', business.id)}
               />
