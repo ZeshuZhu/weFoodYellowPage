@@ -96,3 +96,64 @@ body {
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;
   }
+
+  /* Add these styles to your tailwind.css file */
+
+/* Animation for mobile slide-up panel */
+.slide-up-enter {
+    transform: translateY(100%);
+  }
+  .slide-up-enter-active {
+    transform: translateY(0);
+    transition: transform 300ms cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  .slide-up-exit {
+    transform: translateY(0);
+  }
+  .slide-up-exit-active {
+    transform: translateY(100%);
+    transition: transform 300ms cubic-bezier(0.32, 0, 0.67, 0);
+  }
+  
+  /* Mobile backdrop overlay */
+  .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+  .modal-backdrop-enter-active {
+    opacity: 1;
+  }
+  .modal-backdrop-exit-active {
+    opacity: 0;
+  }
+  
+  /* These styles ensure the header is fixed at the top */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background-color: white;
+  }
+  
+  /* Add padding top to account for fixed header */
+  .pt-16 {
+    padding-top: 4rem;
+  }
+  
+  /* Body styles to ensure proper overflow handling */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* If there are scrollbar issues on detail panel open */
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  
+  /* Make sure the main content width animates smoothly */
+  .transition-all.duration-300.ease-in-out {
+    transition: width 300ms ease-in-out, padding 300ms ease-in-out;
+  }

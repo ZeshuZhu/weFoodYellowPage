@@ -1,11 +1,12 @@
 // src/components/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { loadBusinessData } from '../../utils/data';
 import SearchBar from '../common/SearchBar';
 import CategorySelector from '../common/CategorySelector';
 import FilterSort from '../common/FilterSort';
 import BusinessCard from '../common/BusinessCard';
+import BusinessDetailPanel from '../common/BusinessDetailPanel';
+import Header from '../layout/Header';
 
 const HomePage = () => {
   const [featuredBusinesses, setFeaturedBusinesses] = useState([]);
@@ -14,6 +15,10 @@ const HomePage = () => {
   const [currentView, setCurrentView] = useState('grid');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isSmallMobile, setIsSmallMobile] = useState(window.innerWidth < 480);
+  
+  // State for business detail panel
+  const [selectedBusiness, setSelectedBusiness] = useState(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +78,42 @@ const HomePage = () => {
     }
   };
 
+  // Function to open business detail panel
+  const handleShowBusinessDetail = (business) => {
+    console.log('Opening business detail:', business.id);
+    
+    // Find the business in our data
+    const businessDetail = featuredBusinesses.find(b => b.id === business.id);
+    if (businessDetail) {
+      setSelectedBusiness({
+        ...businessDetail,
+        imageUrl: getPlaceholderImage()
+      });
+      setIsDetailOpen(true);
+    }
+  };
+
+  // Function to close business detail panel
+  const handleCloseBusinessDetail = () => {
+    setIsDetailOpen(false);
+    // After animation completes, clear the selected business
+    setTimeout(() => {
+      setSelectedBusiness(null);
+    }, 300);
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    setActiveCategory(categoryId);
+  };
+
+  const handleViewChange = (view) => {
+    // Only allow list view on mobile
+    if (view === 'list' && window.innerWidth >= 768) {
+      return;
+    }
+    setCurrentView(view);
+  };
+
   const categories = [
     { id: 'All', icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>, label: 'All' },
     { id: 'Inventory', icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>, label: 'Inventory' },
@@ -88,81 +129,96 @@ const HomePage = () => {
     { id: 'Others', icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>, label: 'Others' },
   ];
 
-  const handleCategoryClick = (categoryId) => {
-    setActiveCategory(categoryId);
-  };
-
-  const handleViewChange = (view) => {
-    // Only allow list view on mobile
-    if (view === 'list' && window.innerWidth >= 768) {
-      return;
-    }
-    setCurrentView(view);
-  };
-
   return (
-    <div className="pt-6 pb-12">
-      {/* Search Bar Section */}
-      <div className="mb-10 mt-6">
-        <SearchBar />
-      </div>
+    <div className="flex flex-col min-h-screen">
+      {/* Single Header - Fixed position, always spans full width */}
+      <Header />
       
-      {/* Categories Section */}
-      <div className="container mx-auto mb-8">
-        <CategorySelector 
-          categories={categories}
-          activeCategory={activeCategory}
-          onCategoryClick={handleCategoryClick}
-        />
-      </div>
-      
-      {/* Filter Section */}
-      <div className="container mx-auto px-4 flex justify-between mb-6">
-        <div className="flex items-center bg-gray-100 rounded-full py-1 px-3">
-          <input type="checkbox" id="wefood-verified" className="mr-2" />
-          <label htmlFor="wefood-verified" className="text-sm flex items-center">
-            <span className="mr-1">👍</span>WEFOOD认证
-          </label>
-        </div>
-        
-        {/* Filter and View Toggle Component */}
-        <FilterSort 
-          onViewChange={handleViewChange}
-          currentView={currentView}
-        />
-      </div>
-      
-      {/* Business Cards Section */}
-      {loading ? (
-        <div className="flex justify-center py-8">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      ) : (
-        <div className="container mx-auto px-4">
-          {/* Card Grid/List Container */}
-          <div className={currentView === 'grid' 
-            ? 'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4' 
-            : 'flex flex-col space-y-4'
-          }>
-            {featuredBusinesses.map((business, index) => (
-              <BusinessCard
-                key={business.id}
-                business={{
-                  ...business,
-                  imageUrl: getPlaceholderImage(), // Use the optimized placeholder image
-                  location: business.addresses || "Chino Hills, CA",
-                  recommended: index % 2 === 0 // Just for demo
-                }}
-                view={currentView}
-                initialFavorited={index % 3 === 0} // For demonstration
-                onSave={(isFavorited) => console.log('Save business', business.id, isFavorited)}
-                onDetailsClick={() => console.log('View details', business.id)}
-                onReviewClick={() => console.log('Write review', business.id)}
-              />
-            ))}
+      {/* Main content area below the header */}
+      <div className="pt-16 flex flex-col flex-grow">
+        {/* Main content container */}
+        <div className="flex relative flex-grow">
+          {/* Main content that resizes */}
+          <div 
+            className="transition-all duration-300 ease-in-out"
+            style={{
+              width: !isMobile && isDetailOpen ? '66.67%' : '100%', // 2/3 of screen when panel is open
+              transition: 'width 300ms ease-in-out'
+            }}
+          >
+            <div className="py-6 px-4">
+              {/* Search Bar Section */}
+              <div className="mb-10 mt-6">
+                <SearchBar />
+              </div>
+              
+              {/* Categories Section */}
+              <div className="container mx-auto mb-8">
+                <CategorySelector 
+                  categories={categories}
+                  activeCategory={activeCategory}
+                  onCategoryClick={handleCategoryClick}
+                />
+              </div>
+              
+              {/* Filter Section */}
+              <div className="container mx-auto flex justify-between mb-6">
+                <div className="flex items-center bg-gray-100 rounded-full py-1 px-3">
+                  <input type="checkbox" id="wefood-verified" className="mr-2" />
+                  <label htmlFor="wefood-verified" className="text-sm flex items-center">
+                    <span className="mr-1">👍</span>WEFOOD认证
+                  </label>
+                </div>
+                
+                {/* Filter and View Toggle Component */}
+                <FilterSort 
+                  onViewChange={handleViewChange}
+                  currentView={currentView}
+                />
+              </div>
+              
+              {/* Business Cards Section */}
+              {loading ? (
+                <div className="flex justify-center py-8">
+                  <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <div className="container mx-auto">
+                  {/* Card Grid/List Container */}
+                  <div className={currentView === 'grid' 
+                    ? 'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4' 
+                    : 'flex flex-col space-y-4'
+                  }>
+                    {featuredBusinesses.map((business, index) => (
+                      <BusinessCard
+                        key={business.id}
+                        business={{
+                          ...business,
+                          imageUrl: getPlaceholderImage(),
+                          location: business.addresses || "Chino Hills, CA",
+                          recommended: index % 2 === 0 // Just for demo
+                        }}
+                        view={currentView}
+                        initialFavorited={index % 3 === 0} // For demonstration
+                        onSave={(isFavorited) => console.log('Save business', business.id, isFavorited)}
+                        onDetailsClick={() => handleShowBusinessDetail(business)}
+                        onReviewClick={() => console.log('Write review', business.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      )}
+      </div>
+      
+      {/* Business Detail Side Panel */}
+      <BusinessDetailPanel
+        business={selectedBusiness}
+        isOpen={isDetailOpen}
+        onClose={handleCloseBusinessDetail}
+      />
     </div>
   );
 };

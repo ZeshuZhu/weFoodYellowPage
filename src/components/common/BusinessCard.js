@@ -44,6 +44,23 @@ const BusinessCard = ({
     marginBottom: '8px'
   };
 
+  // Get the appropriate placeholder image based on view mode and screen size
+  const getPlaceholderImage = () => {
+    if (isGridView) {
+      // Grid view - square image (640x640)
+      return "https://placehold.co/640x640";
+    } else {
+      // List view
+      if (isSmallMobile) {
+        // Small mobile - 16:9 aspect ratio (960x540)
+        return "https://placehold.co/960x540";
+      } else {
+        // Desktop/tablet - 4:3 aspect ratio (384x288)
+        return "https://placehold.co/384x288";
+      }
+    }
+  };
+
   return (
     <div 
       className={`bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 ${
@@ -56,7 +73,7 @@ const BusinessCard = ({
         isSmallMobile ? 'w-full aspect-video' : 'w-48 min-w-[12rem]'
       }`}>
         <img 
-          src={business.imageUrl || "https://placehold.co/200x120"} 
+          src={business.imageUrl || getPlaceholderImage()} 
           alt={business.name} 
           className="w-full h-full object-cover"
         />
