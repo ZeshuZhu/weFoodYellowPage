@@ -12,11 +12,13 @@ const BusinessCard = ({
   const [favorited, setFavorited] = useState(initialFavorited);
   const isGridView = view === 'grid';
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSmallMobile, setIsSmallMobile] = useState(window.innerWidth < 480);
   
   // Handle window resize for mobile detection
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
+      setIsSmallMobile(window.innerWidth < 480);
     };
     
     window.addEventListener('resize', handleResize);
@@ -45,13 +47,13 @@ const BusinessCard = ({
   return (
     <div 
       className={`bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 ${
-        !isGridView ? 'flex flex-row' : ''
+        !isGridView ? (isSmallMobile ? 'flex flex-col' : 'flex flex-row') : ''
       } ${isGridView ? 'h-full' : ''}`}
     >
       {/* Card Image */}
       <div className={`relative ${
         isGridView ? 'aspect-square w-full' : 
-        'w-48 min-w-[12rem]'
+        isSmallMobile ? 'w-full aspect-video' : 'w-48 min-w-[12rem]'
       }`}>
         <img 
           src={business.imageUrl || "https://placehold.co/200x120"} 
@@ -78,7 +80,7 @@ const BusinessCard = ({
         )}
       </div>
       
-      {/* Card Content - Modified for better list view layout */}
+      {/* Card Content */}
       <div className={`p-3 ${!isGridView ? 'flex-grow flex flex-col' : ''}`}>
         {isGridView ? (
           // Grid View Layout
@@ -155,7 +157,7 @@ const BusinessCard = ({
             )}
           </div>
         ) : (
-          // List/Row View Layout - Completely restructured
+          // List/Row View Layout - Now with mobile responsiveness
           <div className="flex flex-col justify-between h-full">
             {/* Top content section */}
             <div>
@@ -193,21 +195,40 @@ const BusinessCard = ({
               )}
             </div>
             
-            {/* Bottom section with buttons - Fixed layout for list view */}
-            <div className="flex justify-end items-center mt-2 space-x-4">
-              <button 
-                className="text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
-                onClick={onReviewClick}
-              >
-                提写评论
-              </button>
-              <button 
-                className="bg-black text-white text-sm py-1.5 px-4 rounded-md border border-black"
-                onClick={onDetailsClick}
-              >
-                了解更多
-              </button>
-            </div>
+            {/* Bottom section with buttons - Responsive layout based on mobile or desktop */}
+            {isSmallMobile ? (
+              // Small Mobile List View: Vertical buttons
+              <div className="mt-2">
+                <button 
+                  className="w-full bg-black text-white text-sm py-2 px-3 mb-2 rounded-md border border-black"
+                  onClick={onDetailsClick}
+                >
+                  了解更多
+                </button>
+                <button 
+                  className="w-full text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
+                  onClick={onReviewClick}
+                >
+                  提写评论
+                </button>
+              </div>
+            ) : (
+              // Desktop/Tablet List View: Horizontal buttons
+              <div className="flex justify-end items-center mt-2 space-x-4">
+                <button 
+                  className="text-gray-600 text-sm py-1 border border-transparent hover:border-gray-300 rounded-md"
+                  onClick={onReviewClick}
+                >
+                  提写评论
+                </button>
+                <button 
+                  className="bg-black text-white text-sm py-1.5 px-4 rounded-md border border-black"
+                  onClick={onDetailsClick}
+                >
+                  了解更多
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
