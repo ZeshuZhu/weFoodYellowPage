@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/weFoodYellowPage/static/css/main.75036d64.css",
-    "main.js": "/weFoodYellowPage/static/js/main.c44ed6a7.js",
+    "main.js": "/weFoodYellowPage/static/js/main.90dfa639.js",
     "index.html": "/weFoodYellowPage/index.html",
     "main.75036d64.css.map": "/weFoodYellowPage/static/css/main.75036d64.css.map",
-    "main.c44ed6a7.js.map": "/weFoodYellowPage/static/js/main.c44ed6a7.js.map"
+    "main.90dfa639.js.map": "/weFoodYellowPage/static/js/main.90dfa639.js.map"
   },
   "entrypoints": [
     "static/css/main.75036d64.css",
-    "static/js/main.c44ed6a7.js"
+    "static/js/main.90dfa639.js"
   ]
 }
