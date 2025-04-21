@@ -12,6 +12,8 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
   const [currentView, setCurrentView] = useState('grid');
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSmallMobile, setIsSmallMobile] = useState(window.innerWidth < 480);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -29,11 +31,15 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  // Add a resize listener to switch to grid view on desktop
+  // Handle window resize for responsive detection
   useEffect(() => {
     const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsSmallMobile(width < 480);
+      
       // 768px is Tailwind's md breakpoint
-      if (window.innerWidth >= 768 && currentView === 'list') {
+      if (width >= 768 && currentView === 'list') {
         setCurrentView('grid');
       }
     };
@@ -49,6 +55,23 @@ const HomePage = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, [currentView]);
+
+  // Get appropriate placeholder image based on view mode and screen size
+  const getPlaceholderImage = () => {
+    if (currentView === 'grid') {
+      // Grid view - square image (640x640)
+      return "https://placehold.co/640x640";
+    } else {
+      // List view
+      if (isSmallMobile) {
+        // Small mobile - 16:9 aspect ratio (960x540)
+        return "https://placehold.co/960x540";
+      } else {
+        // Desktop/tablet - 4:3 aspect ratio (384x288)
+        return "https://placehold.co/384x288";
+      }
+    }
+  };
 
   const categories = [
     { id: 'All', icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>, label: 'All' },
@@ -126,7 +149,7 @@ const HomePage = () => {
                 key={business.id}
                 business={{
                   ...business,
-                  imageUrl: "https://placehold.co/200x120",
+                  imageUrl: getPlaceholderImage(), // Use the optimized placeholder image
                   location: business.addresses || "Chino Hills, CA",
                   recommended: index % 2 === 0 // Just for demo
                 }}
