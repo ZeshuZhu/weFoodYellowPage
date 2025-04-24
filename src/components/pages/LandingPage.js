@@ -60,7 +60,7 @@ const LandingPage = () => {
         width: 392px;
         flex-direction: column;
         align-items: flex-start;
-        gap: 40px;
+        gap: 30px;
       }
       
       /* Logo dimensions */
@@ -138,8 +138,8 @@ const LandingPage = () => {
       /* Container that holds all columns */
       .card-container {
         position: absolute;
-        top: 50%;
-        right: -5%;
+        top:100%;
+        right: -40%;
         transform: translateY(-50%) rotate(-18.654deg);
         width: 900px;
         display: flex;
