@@ -14,24 +14,20 @@
 - **Category Navigation**: Browse businesses by categories
 - **Responsive Design**: Works on desktop, tablet, and mobile devices
 - **Business Verification**: "WEFOOD Certified" badging for verified businesses
-    .
-    ├── build                   # Compiled files (alternatively `dist`)
-    ├── docs                    # Documentation files (alternatively `doc`)
-    ├── src                     # Source files (alternatively `lib` or `app`)
-    ├── test                    # Automated tests (alternatively `spec` or `tests`)
-    ├── tools                   # Tools and utilities
-    ├── LICENSE
-    └── README.md
+
+
 ## Project Structure
-## src/
-## ├── assets/             # Images and other static assets
-## ├── components/         # React components
-## │   ├── common/         # Reusable UI components
-## │   ├── layout/         # Layout components (Header, Footer)
-## │   └── pages/          # Page components
-## ├── contexts/           # React context providers
-## ├── styles/             # CSS and styling files
-## └── utils/              # Utility functions and helpers
+```javascript
+src/
+├── assets/             # Images and other static assets
+├── components/         # React components
+│   ├── common/         # Reusable UI components
+│   ├── layout/         # Layout components (Header, Footer)
+│   └── pages/          # Page components
+├── contexts/           # React context providers
+├── styles/             # CSS and styling files
+ └── utils/              # Utility functions and helpers
+```
 
 ## Key Components
 
