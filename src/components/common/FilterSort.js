@@ -1,4 +1,3 @@
-// src/components/common/FilterSort.js
 import React, { useState } from 'react';
 
 const FilterSort = ({ onViewChange, currentView = 'grid' }) => {

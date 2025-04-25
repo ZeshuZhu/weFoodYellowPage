@@ -1,9 +1,22 @@
-// src/components/pages/LandingPage.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import wefoodLogo from '../../assets/images/Logo.png';
 
-// Business cards array remains the same
+/**
+ * 着陆页组件 - 应用程序的初始入口页面
+ * 
+ * 功能特点：
+ * - WeFood平台的视觉介绍
+ * - 动画商家卡片展示
+ * - 用于注册和登录的行动号召按钮
+ * - 具有不同移动和桌面布局的完全响应式设计
+ * 
+ * 布局根据屏幕大小动态调整：
+ * - 桌面：分屏，文字在左，动画卡片在右
+ * - 移动：堆叠布局，文字在上方，垂直滚动卡片在下方
+ */
+
+// 用于动画显示的商家卡片数据（后续图片替换）
 const businessCards = [
     { id: 1, name: 'DeesSeafood', imageUrl: 'https://placehold.co/204x315/e6e6e6/666?text=Dees+Seafood' },
     { id: 2, name: 'KitchenEquipment', imageUrl: 'https://placehold.co/204x315/e6e6e6/666?text=Kitchen+Equipment' },
@@ -32,18 +45,23 @@ const businessCards = [
   ];
 
 const LandingPage = () => {
+//响应式布局和定位的状态
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [rightPosition, setRightPosition] = useState('-65%');
 
   
-  // Handle window resize for responsive layout
+  /**
+   * 处理窗口大小变化以实现响应式布局
+   * 
+   * 根据屏幕宽度调整卡片显示的位置
+   */
   useEffect(() => {
     
     const handleResize = () => {
         const width = window.innerWidth;
         setIsMobile(width < 768);
         
-        // Set the right position based on screen width
+        // 根据屏幕宽度设置右侧动画gallery的位置
         if (width >= 1920) {
           setRightPosition('-35%');
         } else if (width >= 1440 || width >= 1366) {
@@ -68,7 +86,7 @@ const LandingPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Create cards for each column to ensure a seamless infinite scroll
+  // 为每列生成卡片以确保无缝的无限滚动效果
   const generateColumnCards = (startIndex, count) => {
     const cards = [];
     for (let i = 0; i < count; i++) {
@@ -404,7 +422,7 @@ const LandingPage = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '12px',
-                      animation: 'infiniteScrollUp 360s linear infinite'
+                      animation: 'infiniteScrollUp 360s linear infinite' //动画持续时间
                     }}
                   >
                     {generateColumnCards(0, 8).map((card, index) => (
@@ -440,7 +458,7 @@ const LandingPage = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '12px',
-                      animation: 'infiniteScrollDown 360s linear infinite'
+                      animation: 'infiniteScrollDown 360s linear infinite' //动画持续时间
                     }}
                   >
                     {generateColumnCards(4, 8).map((card, index) => (
@@ -476,7 +494,7 @@ const LandingPage = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '12px',
-                      animation: 'infiniteScrollUp 360s linear infinite'
+                      animation: 'infiniteScrollUp 360s linear infinite' //动画持续时间
                     }}
                   >
                     {generateColumnCards(8, 8).map((card, index) => (
@@ -512,7 +530,7 @@ const LandingPage = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '12px',
-                      animation: 'infiniteScrollDown 360s linear infinite'
+                      animation: 'infiniteScrollDown 360s linear infinite' //动画持续时间
                     }}
                   >
                     {generateColumnCards(12, 8).map((card, index) => (
@@ -548,7 +566,7 @@ const LandingPage = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '12px',
-                      animation: 'infiniteScrollUp 360s linear infinite'
+                      animation: 'infiniteScrollUp 360s linear infinite' //动画持续时间
                     }}
                   >
                     {generateColumnCards(16, 8).map((card, index) => (

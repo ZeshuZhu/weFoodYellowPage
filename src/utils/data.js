@@ -1,16 +1,29 @@
 import Papa from 'papaparse';
 
-// Function to load and parse the CSV data
+/**
+ * 从CSV文件加载并解析商家数据
+ * 
+ * 使用PapaParse库将CSV转换为JSON对象
+ * 
+ * CSV应该采用以下格式：传真,电话,名称,联系人,描述,网址,网站,地址,标签,关键词
+ * 
+ * 如果CSV加载失败，则回退到模拟数据
+ * 
+ */
+
 export const loadBusinessData = async () => {
     try {
         console.log("Attempting to fetch CSV file...");
         
+         // 从公共目录获取CSV文件
         const response = await fetch(`${process.env.PUBLIC_URL}/fakeDataBase.csv`);
         console.log("Fetch response:", response.status, response.statusText);
         
         const csvData = await response.text();
         console.log("CSV data first 100 chars:", csvData.substring(0, 100));
         
+        // 使用PapaParse解析CSV数据
+
         const results = Papa.parse(csvData, {
           header: true,
           skipEmptyLines: true,
@@ -20,7 +33,7 @@ export const loadBusinessData = async () => {
         console.log("Parsed results:", results);
         console.log("First item keys:", results.data[0] ? Object.keys(results.data[0]) : "No data");
     
-    // Transform the data to match our expected business structure
+        // 将CSV数据转换为我们的商家对象结构
     const businesses = results.data.map((item, index) => ({
       id: index + 1, // Generate an ID for each business
       name: item.name || 'Unknown Business',
@@ -31,18 +44,18 @@ export const loadBusinessData = async () => {
       website: item.website || item.url || '',
       addresses: item.addresses || '',
       tags: item.tags || item.keyword || '',
-      verified: Math.random() > 0.5 // Randomly assign verification status for demo
+      verified: Math.random() > 0.5 //demo用途随机！！！！！！注意，真实情况请删除！！！！！！
     }));
     
     return businesses;
   } catch (error) {
     console.error('Error loading business data:', error);
-    // Return fallback data if CSV loading fails
+    // 如果CSV加载失败，返回planB
     return getFallbackBusinessData();
   }
 };
 
-// Fallback data in case CSV loading fails
+// 下面是planB
 const getFallbackBusinessData = () => {
   return [
     {
@@ -84,13 +97,12 @@ const getFallbackBusinessData = () => {
   ];
 };
 
-// Function to filter businesses based on search criteria
+// 根据搜索条件筛选商家（placeholder）
 export const filterBusinesses = (businesses, filters = {}) => {
-  // Implementation details...
   return businesses;
 };
 
-// Function to get a single business by ID
+// 通过ID获取单个商家（placeholder）
 export const getBusinessById = (businesses, id) => {
   return businesses.find(business => business.id === parseInt(id));
 };

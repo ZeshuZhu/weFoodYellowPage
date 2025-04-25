@@ -1,16 +1,35 @@
-// src/components/layout/Header.js
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logoImage from '../../assets/images/Logo.png'; // Will be replaced with SVG later
+import logoImage from '../../assets/images/Logo.png'; // 请替换为svg！！！！
+
+/**
+ * 页眉组件 - 主导航页眉
+ * 
+ * 功能特点：
+ * - 徽标和导航
+ * - 用户认证菜单（登录/注册或用户资料下拉菜单）
+ * - 带有汉堡菜单的移动响应式设计
+ * - 已登录用户的下拉菜单
+ */
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to true for testing, connect to auth later
+   /**
+   * 状态声明
+   * 
+   * isLoggedIn: 用户认证状态（为测试设置为true）
+   * dropdownOpen: 控制桌面用户下拉菜单的可见性
+   * mobileMenuOpen: 控制移动侧边菜单的可见性
+   */
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // 目前默认完成验证，后续接入验证系统后在此修改
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    // 下拉菜单和移动菜单的引用
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
-  // Close dropdown/mobile menu when clicking outside
+
+  //处理下拉菜单/移动菜单外部的点击以关闭它们
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,7 +46,7 @@ const Header = () => {
     };
   }, [mobileMenuOpen]);
 
-  // Prevent body scrolling when mobile menu is open
+  // 在移动菜单打开时防止正文滚动
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';

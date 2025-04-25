@@ -1,4 +1,3 @@
-// src/components/common/CategorySelector.js
 import React, { useRef, useState, useEffect } from 'react';
 
 const CategorySelector = ({ categories, activeCategory, onCategoryClick }) => {

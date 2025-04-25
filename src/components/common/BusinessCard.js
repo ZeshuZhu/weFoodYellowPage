@@ -1,5 +1,19 @@
-// src/components/common/BusinessCard.js
 import React, { useState, useEffect } from 'react';
+
+/**
+ * BusinessCard Component
+ * 商家卡片组件
+ * 
+ * Displays business information in either grid or list view
+ * 以网格或列表视图显示商家信息
+ * 
+ * 功能特点：
+ * - 响应式设计，适应不同屏幕尺寸
+ * - 保存/收藏功能
+ * - WEFOOD推荐标记（用于推广商家）
+ * - 网格与列表视图的不同布局
+ * - 基于视图模式的动态图片尺寸
+ */
 
 const BusinessCard = ({ 
   business, 
@@ -9,12 +23,13 @@ const BusinessCard = ({
   onReviewClick,
   initialFavorited = false 
 }) => {
+// 收藏状态和响应式设计的状态
   const [favorited, setFavorited] = useState(initialFavorited);
   const isGridView = view === 'grid';
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isSmallMobile, setIsSmallMobile] = useState(window.innerWidth < 480);
   
-  // Handle window resize for mobile detection
+  // 处理窗口大小变化以检测移动设备
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -26,7 +41,8 @@ const BusinessCard = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  
+
+  // 切换收藏状态并调用onSave回调
   const handleSave = () => {
     setFavorited(!favorited);
     if (onSave) {
@@ -34,7 +50,7 @@ const BusinessCard = ({
     }
   };
 
-  // CSS style for description truncation - works cross-browser
+  // 描述文本截断的CSS样式 - 兼容各种浏览器
   const descriptionStyle = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -44,23 +60,24 @@ const BusinessCard = ({
     marginBottom: '8px'
   };
 
-  // Get the appropriate placeholder image based on view mode and screen size
+  // 根据视图模式和屏幕大小获取适当的占位图片,链接后缀为需要图片资源的大小
   const getPlaceholderImage = () => {
     if (isGridView) {
-      // Grid view - square image (640x640)
+      // 网格视图 - 正方形图片 (640x640)
       return "https://placehold.co/640x640";
     } else {
-      // List view
+      // 列表视图
       if (isSmallMobile) {
-        // Small mobile - 16:9 aspect ratio (960x540)
+        // 小型移动设备 - 16:9宽高比 (960x540)
         return "https://placehold.co/960x540";
       } else {
-        // Desktop/tablet - 4:3 aspect ratio (384x288)
+        // 桌面/平板 - 4:3宽高比 (384x288)
         return "https://placehold.co/384x288";
       }
     }
   };
 
+  //组件JSX在下面继续 （下列注解由ChatGPT生成）
   return (
     <div 
       className={`bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 ${

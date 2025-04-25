@@ -1,4 +1,3 @@
-// src/components/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
 import { loadBusinessData } from '../../utils/data';
 import SearchBar from '../common/SearchBar';
@@ -7,7 +6,26 @@ import FilterSort from '../common/FilterSort';
 import BusinessCard from '../common/BusinessCard';
 import BusinessDetailPanel from '../common/BusinessDetailPanel';
 
+/**
+ * 首页组件 - 主要的商家列表页面
+ * 
+ * 功能特点：
+ * - 网格或列表视图的商家列表
+ * - 分类筛选
+ * - 搜索功能
+ * - 商家详情侧面板
+ * - 适应不同屏幕尺寸的响应式设计
+ * 
+ * 状态管理：
+ * - 商家数据加载
+ * - 活动分类筛选
+ * - 视图模式（网格/列表）
+ * - 响应式布局检测
+ * - 商家详情面板可见性
+ */
+
 const HomePage = () => {
+
   const [featuredBusinesses, setFeaturedBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
@@ -15,15 +33,18 @@ const HomePage = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isSmallMobile, setIsSmallMobile] = useState(window.innerWidth < 480);
   
-  // State for business detail panel
+  // 商家详情面板的状态
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   
+    /**
+   * 在组件挂载时加载商家数据
+   */
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await loadBusinessData();
-        // Get up to 8 businesses to show
+    // 获取最多8个商家显示
         setFeaturedBusinesses(data.slice(0, 8));
       } catch (error) {
         console.error('Error loading data:', error);
@@ -35,14 +56,18 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  // Handle window resize for responsive detection
+  /**
+   * 处理窗口大小变化以实现响应式检测
+   * 
+   * 更新状态变量以进行响应式UI调整
+   */
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       setIsMobile(width < 768);
       setIsSmallMobile(width < 480);
       
-      // 768px is Tailwind's md breakpoint
+    // 768px是Tailwind的md断点
       if (width >= 768 && currentView === 'list') {
         setCurrentView('grid');
       }
@@ -60,7 +85,7 @@ const HomePage = () => {
     };
   }, [currentView]);
 
-  // Get appropriate placeholder image based on view mode and screen size
+  // 根据视图模式和屏幕大小获取适当的placeholder图像
   const getPlaceholderImage = () => {
     if (currentView === 'grid') {
       // Grid view - square image (640x640)
@@ -77,16 +102,16 @@ const HomePage = () => {
     }
   };
 
-  // Function to open business detail panel
+  // 处理显示商家详情面板（都是血淋淋的bug）
   const handleShowBusinessDetail = (business) => {
-    // Prevent reopening the same business
+    // 防止重新打开相同的商家
     if (isDetailOpen && selectedBusiness && selectedBusiness.id === business.id) {
       return;
     }
     
     const businessDetail = featuredBusinesses.find(b => b.id === business.id);
     if (businessDetail) {
-      // Close panel first if it's already open
+      // 如果面板已经打开，先关闭
       if (isDetailOpen) {
         setIsDetailOpen(false);
         setTimeout(() => {
@@ -95,7 +120,7 @@ const HomePage = () => {
             imageUrl: getPlaceholderImage()
           });
           setIsDetailOpen(true);
-        }, 200); // Match animation duration
+        }, 200); // 匹配动画持续时间 （搜索前缀统一修改）
       } else {
         setSelectedBusiness({
           ...businessDetail,
@@ -106,27 +131,30 @@ const HomePage = () => {
     }
   };
 
-  // Function to close business detail panel
+  // 处理关闭商家详情面板
   const handleCloseBusinessDetail = () => {
     setIsDetailOpen(false);
-    // After animation completes, clear the selected business
+    // 动画完成后，清除选定的商家
     setTimeout(() => {
       setSelectedBusiness(null);
-    }, 200); // Match animation duration
+    }, 200); // 匹配动画持续时间
   };
 
+  //处理分类选择
   const handleCategoryClick = (categoryId) => {
     setActiveCategory(categoryId);
   };
 
+  // 处理视图模式变化（网格/列表）
   const handleViewChange = (view) => {
-    // Only allow list view on mobile
+    // 只允许在移动设备上使用列表视图
     if (view === 'list' && window.innerWidth >= 768) {
       return;
     }
     setCurrentView(view);
   };
 
+  //带有图标和标签的分类定义
   const categories = [
     { id: 'All', icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>, label: 'All' },
     { id: 'Inventory', icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>, label: 'Inventory' },
@@ -142,6 +170,8 @@ const HomePage = () => {
     { id: 'Others', icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>, label: 'Others' },
   ];
 
+
+  //组件JSX （注解为gpt生成）
   return (
     <div className="flex flex-col min-h-screen">
       {/* Main content area */}

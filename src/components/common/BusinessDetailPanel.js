@@ -1,5 +1,21 @@
-// src/components/common/BusinessDetailPanel.js
 import React, { useState, useEffect, useRef } from 'react';
+
+/**
+ * 商家详情面板组件 - 显示详细的商家信息
+ * 
+ * 
+ * 功能特点：
+ * - 适用于移动和桌面的响应式设计
+ * - 平滑用户体验的滑入动画
+ * - 用于不同信息部分的标签导航
+ * - 带有商家图片的粘性标题
+ * - 关闭和保存按钮
+ * - 带有溢出处理的滚动内容
+ * 
+ * 桌面：固定宽度的侧边面板
+ * 移动：带有从下到上动画的全屏覆盖
+ * 
+ */
 
 const BusinessDetailPanel = ({ 
   business, 
@@ -10,7 +26,7 @@ const BusinessDetailPanel = ({
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const panelRef = useRef(null);
   
-  // Handle window resize
+  //处理窗口大小变化以实现响应式布局
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -20,7 +36,7 @@ const BusinessDetailPanel = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Handle escape key
+  // Esc键以关闭面板
   useEffect(() => {
     const handleEscKey = (event) => {
       if (event.key === 'Escape' && isOpen) {
@@ -32,7 +48,11 @@ const BusinessDetailPanel = ({
     return () => document.removeEventListener('keydown', handleEscKey);
   }, [isOpen, onClose]);
   
-  // Control body scroll on mobile
+  /**
+   * 控制移动设备上的body滚动
+   * 
+   * 防止面板在移动设备上打开时的背景滚动
+   */
   useEffect(() => {
     if (isMobile && isOpen) {
       document.body.style.overflow = 'hidden';
@@ -45,7 +65,11 @@ const BusinessDetailPanel = ({
     };
   }, [isOpen, isMobile]);
 
-  // Manage content shift when panel opens/closes
+  /**
+   * 管理面板打开/关闭时的内容移动
+   * 
+   * 在桌面上面板打开时添加类以将主要内容向左移动
+   */
   useEffect(() => {
     // Don't do anything on mobile
     if (isMobile) return;
@@ -66,21 +90,21 @@ const BusinessDetailPanel = ({
     return null;
   }
 
-  // Extract service tags if available
+  // 提取服务标签（如果可用）
   const services = business.tags ? business.tags.split(',').filter(tag => tag.trim()) : [];
 
-  // Mobile view uses a full overlay
+  // 移动视图使用全屏覆盖
   if (isMobile) {
     return (
       <>
-        {/* Mobile backdrop */}
+        {/* 移动背景 */}
         <div 
           className={`fixed inset-0 bg-black z-40 ${isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'}`}
           onClick={onClose}
           style={{ transition: 'opacity 500ms ease' }}
         ></div>
         
-        {/* Mobile panel */}
+        {/* 移动面板 */}
         <div 
           ref={panelRef}
           className="fixed inset-0 z-50 bg-white shadow-xl overflow-hidden transform"
@@ -95,7 +119,7 @@ const BusinessDetailPanel = ({
     );
   }
   
-  // Desktop view with side panel
+  // 带有侧边面板的桌面视图
   return (
     <div 
       ref={panelRef}

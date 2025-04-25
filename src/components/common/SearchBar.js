@@ -1,8 +1,27 @@
-// src/components/common/SearchBar.js
 import React, { useState } from 'react';
 
+
+/**
+ * 搜索栏组件 - 用于搜索商家的输入框
+ * 
+ * 功能特点：
+ * - 适用于移动和桌面的响应式设计
+ * - 针对不同屏幕尺寸的不同按钮样式
+ * - 解释搜索功能的占位符文本
+ * 
+ * 目前对搜索使用占位符警报功能
+ * 未来应连接到实际的搜索功能
+ */
+
 const SearchBar = () => {
+// 搜索查询输入的状态
   const [searchQuery, setSearchQuery] = useState('');
+
+  /**
+   * 处理搜索表单提交
+   * 
+   * 目前显示一个警报 - 应替换为实际搜索
+   */
 
   const handleSearch = (e) => {
     e.preventDefault();
