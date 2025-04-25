@@ -1,9 +1,9 @@
 // src/components/pages/LandingPage.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import wefoodLogo from '../../assets/images/Logo.png'; // Make sure this path is correct
+import wefoodLogo from '../../assets/images/Logo.png';
 
-// Extended array of business card images for the gallery - more images to ensure no empty spaces
+// Business cards array remains the same
 const businessCards = [
     { id: 1, name: 'DeesSeafood', imageUrl: 'https://placehold.co/204x315/e6e6e6/666?text=Dees+Seafood' },
     { id: 2, name: 'KitchenEquipment', imageUrl: 'https://placehold.co/204x315/e6e6e6/666?text=Kitchen+Equipment' },
@@ -33,327 +33,581 @@ const businessCards = [
 
 const LandingPage = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [rightPosition, setRightPosition] = useState('-65%');
+
   
   // Handle window resize for responsive layout
   useEffect(() => {
+    
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+        const width = window.innerWidth;
+        setIsMobile(width < 768);
+        
+        // Set the right position based on screen width
+        if (width >= 1920) {
+          setRightPosition('-35%');
+        } else if (width >= 1440 || width >= 1366) {
+          setRightPosition('-65%');
+        } else if (width >= 1280) {
+          setRightPosition('-90%');
+        } else if (width >= 1100) {
+          setRightPosition('-105%');
+        } else if (width >= 1000) {
+          setRightPosition('-130%');
+        } else if (width >= 888) {
+            setRightPosition('-155%');
+          }else if (width >= 768) {
+            setRightPosition('-200%');
+          }
+      };
+      
+      handleResize();
+    
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Add custom CSS for the landing page
-  useEffect(() => {
-    const styleEl = document.createElement('style');
-    styleEl.textContent = `
-      /* Background gradient - exact values provided */
-      .landing-bg {
-        background: linear-gradient(179deg, rgba(255, 183, 0, 0.01) -60.96%, rgba(255, 255, 255, 0.20) 27.98%, rgba(213, 211, 244, 0.20) 116.92%), #FFF;
-        overflow: hidden;
-      }
-      
-      /* Text content group */
-      .text-group {
-        display: flex;
-        width: 392px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 30px;
-      }
-      
-      /* Logo dimensions */
-      .wefood-logo {
-        width: 120px;
-        height: 33.812px;
-        aspect-ratio: 120.00/33.81;
-        object-fit: contain;
-      }
-      
-      /* Heading */
-      .main-heading {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
-        align-self: stretch;
-        font-size: 40px;
-        line-height: 1.2;
-        font-weight: bold;
-        margin: 0;
-      }
-      
-      /* Description */
-      .description {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
-        font-size: 20px;
-        color: #333;
-        margin: 0;
-      }
-      
-      /* CTA Button */
-      .cta-button {
-        display: flex;
-        width: 200px;
-        padding: 16px 22.5px;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
-        background-color: #000;
-        color: #fff;
-        border-radius: 4px;
-        text-decoration: none;
-        font-size: 18px;
-        font-weight: 500;
-        border: none;
-        cursor: pointer;
-      }
-      
-      /* Login link */
-      .login-link {
-        color: #007BFF;
-        text-decoration: none;
-      }
-      
-      .login-link:hover {
-        text-decoration: underline;
-      }
-      
-      /* Card Display Layout */
-      .card-display {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 60%;
-        height: 100%;
-        overflow: hidden;
-        pointer-events: none;
-      }
-      
-      /* Container that holds all columns */
-      .card-container {
-        position: absolute;
-        top:100%;
-        right: -40%;
-        transform: translateY(-50%) rotate(-18.654deg);
-        width: 900px;
-        display: flex;
-        gap: 12px;
-      }
-      
-      /* Column wrapper to create infinite scroll effect */
-      .column-wrapper {
-        overflow: hidden;
-      }
-      
-      /* Columns scrolling in alternating directions with proper infinite scroll */
-      .card-column {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      
-      .card-column-1 {
-        animation: infiniteScrollUp 360s linear infinite;
-      }
-      
-      .card-column-2 {
-        animation: infiniteScrollDown 360s linear infinite;
-      }
-      
-      .card-column-3 {
-        animation: infiniteScrollUp 360s linear infinite;
-      }
-      
-      .card-column-4 {
-        animation: infiniteScrollDown 360s linear infinite;
-      }
-      
-      /* Animation for infinite scroll up - using CSS transform to create true infinite loop */
-      @keyframes infiniteScrollUp {
-        0% {
-          transform: translateY(0);
-        }
-        100% {
-          transform: translateY(-50%);
-        }
-      }
-      
-      /* Animation for infinite scroll down - using CSS transform to create true infinite loop */
-      @keyframes infiniteScrollDown {
-        0% {
-          transform: translateY(-50%);
-        }
-        100% {
-          transform: translateY(0);
-        }
-      }
-      
-      /* Individual card styling - no visible borders */
-      .card {
-        width: 204px;
-        height: 315px;
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: white;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      }
-      
-      .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      
-      /* Mobile styles */
-      @media (max-width: 768px) {
-        .landing-container {
-          flex-direction: column;
-        }
-        
-        .text-group {
-          width: 100%;
-          max-width: 392px;
-          margin: 0 auto;
-          align-items: center;
-        }
-        
-        .main-heading, .description {
-          justify-content: center;
-          text-align: center;
-        }
-        
-        .card-display {
-          position: relative;
-          width: 100%;
-          height: 400px;
-          margin-top: 40px;
-        }
-        
-        .card-container {
-          position: relative;
-          transform: none;
-          width: 100%;
-          overflow-x: auto;
-          padding: 20px;
-          gap: 16px;
-          justify-content: flex-start;
-          overflow-y: hidden;
-        }
-        
-        .column-wrapper {
-          width: auto;
-          height: auto;
-        }
-        
-        .card-column {
-          flex-direction: row;
-          animation: none;
-        }
-      }
-    `;
-    document.head.appendChild(styleEl);
-    
-    return () => {
-      document.head.removeChild(styleEl);
-    };
-  }, []);
-
   // Create cards for each column to ensure a seamless infinite scroll
-  // Each column needs to have its content duplicated to ensure a seamless loop
   const generateColumnCards = (startIndex, count) => {
     const cards = [];
-    // Create enough cards to fill the height and ensure smooth looping
     for (let i = 0; i < count; i++) {
       const cardIndex = (startIndex + i) % businessCards.length;
       cards.push(businessCards[cardIndex]);
     }
-    // Duplicate all cards to create the seamless loop
     return [...cards, ...cards];
   };
 
   return (
-    <div className="landing-bg min-h-screen">
-      <div className="relative min-h-screen landing-container flex flex-row">
-        {/* Left content section with exact specifications */}
-        <div className="w-1/2 px-16 flex items-center">
-          <div className="text-group">
-            {/* Logo with exact dimensions */}
-            <img src={wefoodLogo} alt="WEFOOD" className="wefood-logo" />
-            
-            {/* Main heading with exact specs */}
-            <h1 className="main-heading">Where trusted partnerships begin.</h1>
-            
-            {/* Description with exact specs */}
-            <p className="description">10,000人驻商家信赖选择</p>
-            
-            {/* CTA Button with exact specs */}
-            <Link to="/home" className="cta-button">
-              入驻平台
-            </Link>
-            
-            {/* Login link */}
-            <div className="text-sm text-gray-500">
-              <p>已有账号? <Link to="/login" className="login-link">登录</Link></p>
+    <>
+      {/* Background Overlay - positioned beneath content but above body background */}
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(to bottom,rgba(255, 183, 0, 0.05) , #FFFFFF, #D5D3F4)',
+          zIndex: 0 
+        }}
+      ></div>
+      
+      {/* Content Container - positioned above the background overlay */}
+      <div 
+        className="relative min-h-screen"
+        style={{ 
+          position: 'relative',
+          zIndex: 1 
+        }}
+      >
+        <div className="relative min-h-screen flex flex-col md:flex-row">
+          {/* Left content section */}
+          <div className="w-full md:w-5/12 px-6 md:px-16 flex items-center justify-center md:justify-end">
+            <div className="text-group">
+              {/* Logo with exact dimensions */}
+              <img src={wefoodLogo} alt="WEFOOD" className="wefood-logo" />
+              
+              {/* Main heading */}
+              <h1 className="main-heading">Where trusted partnerships begin.</h1>
+              
+              {/* Description */}
+              <p className="description">10,000人驻商家信赖选择</p>
+              
+              {/* CTA Button */}
+              <Link to="/home" className="cta-button">
+                入驻平台
+              </Link>
+              
+              {/* Login link */}
+              <div className="text-sm text-gray-500">
+                <p>已有账号? <Link to="/login" className="login-link">登录</Link></p>
+              </div>
             </div>
           </div>
-        </div>
-        
-        {/* Card display section with four vertical scrolling columns */}
-        <div className="card-display">
-          <div className="card-container">
-            {/* Column 1 */}
-            <div className="column-wrapper">
-              <div className="card-column card-column-1">
-                {generateColumnCards(0, 8).map((card, index) => (
-                  <div key={`col1-${index}`} className="card">
-                    <img src={card.imageUrl} alt={card.name} />
-                  </div>
-                ))}
-              </div>
-            </div>
+          
+          {/* Card display section - with soft edge gradients */}
+          <div 
+            className="card-display"
+            style={{
+              position: isMobile ? 'relative' : 'absolute',
+              top: 0,
+              right: 0,
+              width: isMobile ? '100%' : '60%',
+              height: isMobile ? '400px' : '100%',
+              overflow: 'hidden',
+              pointerEvents: 'none'
+            }}
+          >
+            {/* Soft edge left */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                width: '80px',
+                background: 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255,255,255,0))',//先不用，会有根线
+                zIndex: 3,
+                pointerEvents: 'none'
+              }}
+            ></div>
             
-            {/* Column 2 */}
-            <div className="column-wrapper">
-              <div className="card-column card-column-2">
-                {generateColumnCards(4, 8).map((card, index) => (
-                  <div key={`col2-${index}`} className="card">
-                    <img src={card.imageUrl} alt={card.name} />
+            {isMobile ? (
+              // New mobile vertical card display with 5 columns
+              <div 
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '400px',
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Five column layout for mobile */}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  padding: '0 10px'
+                }}>
+                  {/* Column 1 */}
+                  <div style={{ overflow: 'hidden', width: '60px' }}>
+                    <div 
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        animation: 'mobileScrollRight 30s linear infinite'
+                      }}
+                    >
+                      {generateColumnCards(0, 5).map((card, index) => (
+                        <div 
+                          key={`mobile-col1-${index}`} 
+                          style={{
+                            width: '60px',
+                            height: '90px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            backgroundColor: 'white',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+                            marginBottom: '10px',
+                            flexShrink: 0
+                          }}
+                        >
+                          <img 
+                            src={card.imageUrl} 
+                            alt={card.name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Column 3 */}
-            <div className="column-wrapper">
-              <div className="card-column card-column-3">
-                {generateColumnCards(8, 8).map((card, index) => (
-                  <div key={`col3-${index}`} className="card">
-                    <img src={card.imageUrl} alt={card.name} />
+                  
+                  {/* Column 2 */}
+                  <div style={{ overflow: 'hidden', width: '60px' }}>
+                    <div 
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        animation: 'mobileScrollLeft 30s linear infinite'
+                      }}
+                    >
+                      {generateColumnCards(5, 5).map((card, index) => (
+                        <div 
+                          key={`mobile-col2-${index}`} 
+                          style={{
+                            width: '60px',
+                            height: '90px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            backgroundColor: 'white',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+                            marginBottom: '10px',
+                            flexShrink: 0
+                          }}
+                        >
+                          <img 
+                            src={card.imageUrl} 
+                            alt={card.name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Column 4 */}
-            <div className="column-wrapper">
-              <div className="card-column card-column-4">
-                {generateColumnCards(12, 8).map((card, index) => (
-                  <div key={`col4-${index}`} className="card">
-                    <img src={card.imageUrl} alt={card.name} />
+                  
+                  {/* Column 3 */}
+                  <div style={{ overflow: 'hidden', width: '60px' }}>
+                    <div 
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        animation: 'mobileScrollRight 25s linear infinite'
+                      }}
+                    >
+                      {generateColumnCards(10, 5).map((card, index) => (
+                        <div 
+                          key={`mobile-col3-${index}`} 
+                          style={{
+                            width: '60px',
+                            height: '90px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            backgroundColor: 'white',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+                            marginBottom: '10px',
+                            flexShrink: 0
+                          }}
+                        >
+                          <img 
+                            src={card.imageUrl} 
+                            alt={card.name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                  
+                  {/* Column 4 */}
+                  <div style={{ overflow: 'hidden', width: '60px' }}>
+                    <div 
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        animation: 'mobileScrollLeft 35s linear infinite'
+                      }}
+                    >
+                      {generateColumnCards(15, 5).map((card, index) => (
+                        <div 
+                          key={`mobile-col4-${index}`} 
+                          style={{
+                            width: '60px',
+                            height: '90px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            backgroundColor: 'white',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+                            marginBottom: '10px',
+                            flexShrink: 0
+                          }}
+                        >
+                          <img 
+                            src={card.imageUrl} 
+                            alt={card.name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Column 5 */}
+                  <div style={{ overflow: 'hidden', width: '60px' }}>
+                    <div 
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        animation: 'mobileScrollRight 40s linear infinite'
+                      }}
+                    >
+                      {generateColumnCards(20, 5).map((card, index) => (
+                        <div 
+                          key={`mobile-col5-${index}`} 
+                          style={{
+                            width: '60px',
+                            height: '90px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            backgroundColor: 'white',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+                            marginBottom: '10px',
+                            flexShrink: 0
+                          }}
+                        >
+                          <img 
+                            src={card.imageUrl} 
+                            alt={card.name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Fade overlay at top and bottom for smoother scrolling effect */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '60px',
+                  background: 'linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0))',
+                  pointerEvents: 'none',
+                  zIndex: 2
+                }}></div>
+                
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: '60px',
+                  background: 'linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))',
+                  pointerEvents: 'none',
+                  zIndex: 2
+                }}></div>
               </div>
-            </div>
+            ) : (
+              // Desktop vertical columns - UPDATED to 5 columns
+              <div 
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: rightPosition,
+                  transform: 'translateY(-50%) rotate(-18.654deg)',
+                  width: '1020px', // Increased width to accommodate 5 columns
+                  display: 'flex',
+                  gap: '12px'
+                }}
+              >
+                {/* Column 1 */}
+                <div style={{ overflow: 'hidden' }}>
+                  <div 
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      animation: 'infiniteScrollUp 360s linear infinite'
+                    }}
+                  >
+                    {generateColumnCards(0, 8).map((card, index) => (
+                      <div 
+                        key={`col1-${index}`} 
+                        style={{
+                          width: '204px',
+                          height: '315px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          backgroundColor: 'white',
+                          boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                        }}
+                      >
+                        <img 
+                          src={card.imageUrl} 
+                          alt={card.name}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Column 2 */}
+                <div style={{ overflow: 'hidden' }}>
+                  <div 
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      animation: 'infiniteScrollDown 360s linear infinite'
+                    }}
+                  >
+                    {generateColumnCards(4, 8).map((card, index) => (
+                      <div 
+                        key={`col2-${index}`} 
+                        style={{
+                          width: '204px',
+                          height: '315px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          backgroundColor: 'white',
+                          boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                        }}
+                      >
+                        <img 
+                          src={card.imageUrl} 
+                          alt={card.name}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Column 3 */}
+                <div style={{ overflow: 'hidden' }}>
+                  <div 
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      animation: 'infiniteScrollUp 360s linear infinite'
+                    }}
+                  >
+                    {generateColumnCards(8, 8).map((card, index) => (
+                      <div 
+                        key={`col3-${index}`} 
+                        style={{
+                          width: '204px',
+                          height: '315px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          backgroundColor: 'white',
+                          boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                        }}
+                      >
+                        <img 
+                          src={card.imageUrl} 
+                          alt={card.name}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Column 4 */}
+                <div style={{ overflow: 'hidden' }}>
+                  <div 
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      animation: 'infiniteScrollDown 360s linear infinite'
+                    }}
+                  >
+                    {generateColumnCards(12, 8).map((card, index) => (
+                      <div 
+                        key={`col4-${index}`} 
+                        style={{
+                          width: '204px',
+                          height: '315px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          backgroundColor: 'white',
+                          boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                        }}
+                      >
+                        <img 
+                          src={card.imageUrl} 
+                          alt={card.name}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* NEW Column 5 */}
+                <div style={{ overflow: 'hidden' }}>
+                  <div 
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      animation: 'infiniteScrollUp 360s linear infinite'
+                    }}
+                  >
+                    {generateColumnCards(16, 8).map((card, index) => (
+                      <div 
+                        key={`col5-${index}`} 
+                        style={{
+                          width: '204px',
+                          height: '315px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          backgroundColor: 'white',
+                          boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                        }}
+                      >
+                        <img 
+                          src={card.imageUrl} 
+                          alt={card.name}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
+      
+      {/* Animation styles */}
+      <style>{`
+        @keyframes infiniteScrollUp {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50%); }
+        }
+        
+        @keyframes infiniteScrollDown {
+          0% { transform: translateY(-50%); }
+          100% { transform: translateY(0); }
+        }
+        
+        /* Parallel animations for mobile */
+        @keyframes mobileScrollRight {
+          0% { transform: translateX(0); }
+          50% { transform: translateX(15px); }
+          100% { transform: translateX(0); }
+        }
+        
+        @keyframes mobileScrollLeft {
+          0% { transform: translateX(0); }
+          50% { transform: translateX(-15px); }
+          100% { transform: translateX(0); }
+        }
+      `}</style>
+    </>
   );
 };
 
