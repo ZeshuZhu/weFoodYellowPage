@@ -1,8 +1,9 @@
 # WeFood Yellow Page Project
 
-## Project Overview
+## Project Note
 
-WeFood Yellow Page is a comprehensive business directory platform focused on connecting restaurants with suppliers, service providers, and other business partners within the Asian/Chinese restaurant industry. The application serves as a digital yellow pages that helps businesses find reliable suppliers and partners, while allowing suppliers to showcase their services to potential clients.
+1. Please note the landing page mobile version now is not yet done.
+2. the main page animate not yet done
 
 ## Features
 
