@@ -16,15 +16,15 @@
 - **Business Verification**: "WEFOOD Certified" badging for verified businesses
 
 ## Project Structure
-src/
-├── assets/             # Images and other static assets
-├── components/         # React components
-│   ├── common/         # Reusable UI components
-│   ├── layout/         # Layout components (Header, Footer)
-│   └── pages/          # Page components
-├── contexts/           # React context providers
-├── styles/             # CSS and styling files
-└── utils/              # Utility functions and helpers
+## src/
+## ├── assets/             # Images and other static assets
+## ├── components/         # React components
+## │   ├── common/         # Reusable UI components
+## │   ├── layout/         # Layout components (Header, Footer)
+## │   └── pages/          # Page components
+## ├── contexts/           # React context providers
+## ├── styles/             # CSS and styling files
+## └── utils/              # Utility functions and helpers
 
 ## Key Components
 
