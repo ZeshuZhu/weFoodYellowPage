@@ -123,7 +123,7 @@ The application is fully responsive with specific layouts for:
 Mobile-specific components adapt their layout based on screen width, detected through:
 ```javascript
 const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
+```
 ## Known Issues and Limitations
 1. The search functionality is currently not fully implemented (placeholder alert)
 2. CSV data loading may fail if the file format doesn't match exactly
